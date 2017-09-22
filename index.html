@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Top</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+
+      <h3 class="text-center">Make Table</h3>
+
+      <hr>
+
+      <form class="form-horizontal">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Table Source</label>
+          <div class="col-sm-8 input-group">
+            <span class="input-group-btn">
+              <label class="btn btn-primary">
+                Choose File
+                <input type="file" style="display:none"></input>
+              </label>
+            </span>
+            <input type="text" class="form-control" readonly="">
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-primary" disabled>Display</button>
+            </span>
+          </div>
+        </div>
+      </form>
+
+      <hr>
+
+      <div class="table-responsive">
+        <table class="table table-hover" id="display">
+        </table>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="./jstable.js"></script>
+    <script>
+      var reader = new FileReader();
+
+      $(document).on('change', ':file', function(evt) {
+        // Display File Name
+        var input = $(this);
+        var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+        input.parent().parent().next(':text').val(label);
+
+        if (label === '') {
+          input.parent().parent().next().next().children(':button').get(0).disabled = true;
+          $('table#display').html('');
+        } else {
+          // Read File
+          reader.readAsText(evt.target.files[0]);
+          reader.onload = (function(){
+            // Enable Button
+            input.parent().parent().next().next().children(':button').get(0).disabled = false;
+          });
+        }
+      });
+
+      $(document).on('click', ':button', function() {
+        var input = $(this);
+        try {
+          $('table#display').html(makeTable(input.parent().prev(':text').val(), reader.result));
+        } catch(e) {
+          $('table#display').html(e);
+        }
+      });
+    </script>
+  </body>
+</html>

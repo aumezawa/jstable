@@ -1,0 +1,12 @@
+[
+  {
+    "zz": "test",
+    "type": "node",
+    "name": "aaa"
+  },
+  {
+    "type": "node",
+    "name": "aaa",
+    "test": [1,2,3]
+  }
+]
